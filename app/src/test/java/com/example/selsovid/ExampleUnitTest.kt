@@ -1,4 +1,4 @@
-package com.example.myapplicationhelp
+package com.example.selsovid
 
 import org.junit.Test
 

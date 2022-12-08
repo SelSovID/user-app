@@ -1,10 +1,9 @@
-package com.example.myapplicationhelp
+package com.example.selsovid
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.replace
-import com.example.myapplicationhelp.databinding.ActivityMainBinding
+import com.example.selsovid.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,25 +13,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        replaceFragment(HomeFragment())
+        replaceFragment(Home())
 
-        binding.bottomNavigation.setOnItemSelectedListener {
+        binding.bottomNavigation.setOnItemSelectedListener{
             when(it.itemId){
-                R.id.Home -> replaceFragment(HomeFragment())
-                R.id.ScanQR -> replaceFragment(ScanQRFragment())
-                R.id.List -> replaceFragment(ListFragment())
-                else -> {
+                R.id.home -> replaceFragment(Home())
+                R.id.qrscanner -> replaceFragment(QRScanner())
+                R.id.listoftruths -> replaceFragment(Listoftruths())
+
+                else->{
                 }
             }
             true
         }
     }
 
-    private fun replaceFragment(fragment : Fragment){
+    private fun replaceFragment(fragment: Fragment){
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.container,fragment)
+        fragmentTransaction.replace(R.id.frame_layout,fragment)
         fragmentTransaction.commit()
     }
-
 }

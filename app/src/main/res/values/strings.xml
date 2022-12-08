@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">My Applicationhelp</string>
+    <string name="app_name">SelSovId</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="textview_home">Home Sweet Home</string>
+    <string name="textview_qrscanner">Scan uw QR hier!</string>
 </resources>

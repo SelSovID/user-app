@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "My Applicationhelp"
+rootProject.name = "SelSovId"
 include ':app'

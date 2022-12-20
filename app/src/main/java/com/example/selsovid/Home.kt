@@ -16,29 +16,33 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 
 class Home : Fragment() {
     lateinit var imageView: ImageView
+    lateinit var mView: View
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        mView = inflater.inflate(R.layout.fragment_home, container, false)
+        val generateButton = mView.findViewById(R.id.btnGenerate) as? Button
+
+        generateButton?.setOnClickListener{
+            generateCode()
+            //val toast = Toast.makeText(activity, "code genereren", Toast.LENGTH_SHORT)
+            //toast.show()
+        }
+
+        return mView
     }
 
-    fun generateCode(view: View){
-        val text = "ayaya"
+    fun generateCode(){
+        var ownAddress = "arr, "
+        val text = ownAddress + "dit is een bluetooth adres"
         val encoder = BarcodeEncoder()
         val bitmap = encoder.encodeBitmap(text, BarcodeFormat.QR_CODE, 400, 400)
-        imageView = view?.findViewById<ImageView>(R.id.myImageView)!!
-
-        if (imageView != null) {
-            imageView.setImageBitmap(bitmap)
-            //val toast = Toast.makeText(context, "epico", Toast.LENGTH_SHORT)
-            //toast.show()
-        } else {
-            imageView.setImageBitmap(bitmap)
-            val toast = Toast.makeText(context, "broke", Toast.LENGTH_SHORT)
-            toast.show()
-        }
+        imageView = view?.findViewById(R.id.QrcodeImageView) as ImageView
+        imageView.setImageBitmap(bitmap)
     }
+
+
 
 
 

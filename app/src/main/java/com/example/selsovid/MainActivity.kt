@@ -5,11 +5,17 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.selsovid.databinding.ActivityMainBinding
+import com.google.zxing.BarcodeFormat
+import com.journeyapps.barcodescanner.BarcodeEncoder
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -18,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     private val REQUEST_ID_MULTIPLE_PERMISSIONS = 7
 
-
+    lateinit var imageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +45,9 @@ class MainActivity : AppCompatActivity() {
             true
         }
         checkAndroidVersion()
+
+
+        //if(fragment == "R.id.home")
     }
 
     private fun replaceFragment(fragment: Fragment){
@@ -47,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.replace(R.id.frame_layout,fragment)
         fragmentTransaction.commit()
     }
+
 
     private fun checkAndroidVersion() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

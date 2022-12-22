@@ -26,8 +26,8 @@ class Home : Fragment() {
 
         generateButton?.setOnClickListener{
             generateCode()
-            //val toast = Toast.makeText(activity, "code genereren", Toast.LENGTH_SHORT)
-            //toast.show()
+            val toast = Toast.makeText(activity, "code genereren", Toast.LENGTH_SHORT)
+            toast.show()
         }
 
         return mView
@@ -41,11 +41,6 @@ class Home : Fragment() {
         imageView = view?.findViewById(R.id.QrcodeImageView) as ImageView
         imageView.setImageBitmap(bitmap)
     }
-
-
-
-
-
 
 
 }

@@ -28,6 +28,8 @@ class QRScanner : Fragment(){
             codeScanner.decodeCallback = DecodeCallback {
                 activity.runOnUiThread {
                     Toast.makeText(activity, it.text, Toast.LENGTH_LONG).show()
+                    val otherAdress = it.text
+
                 }
             }
             scannerView.setOnClickListener {

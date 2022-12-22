@@ -70,6 +70,13 @@ class MainActivity : AppCompatActivity() {
         val camera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
         val write = ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
         val read = ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)
+        val bluetooth = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
+        val bluetoothAdmin = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN)
+        val bluetoothAdvertise = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADVERTISE)
+        val bluetoothConnect = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
+        val bluetoothScan = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN)
+
+
 
         val listPermissionsNeeded: MutableList<String> = ArrayList()
         if (camera != PackageManager.PERMISSION_GRANTED) {
@@ -80,6 +87,21 @@ class MainActivity : AppCompatActivity() {
         }
         if (read != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+        if (bluetooth != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.BLUETOOTH)
+        }
+        if (bluetoothAdmin != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.BLUETOOTH_ADMIN)
+        }
+        if (bluetoothConnect != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.BLUETOOTH_CONNECT)
+        }
+        if (bluetoothAdvertise != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.BLUETOOTH_ADVERTISE)
+        }
+        if (bluetoothScan != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.BLUETOOTH_SCAN)
         }
 
         if (!listPermissionsNeeded.isEmpty()) {

@@ -1,13 +1,11 @@
 package com.example.selsovid
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
@@ -15,6 +13,7 @@ import com.budiyev.android.codescanner.DecodeCallback
 
 class QRScanner : Fragment(){
         private lateinit var codeScanner: CodeScanner
+        var activity: MainActivity? = getActivity() as MainActivity?
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View {
@@ -28,8 +27,8 @@ class QRScanner : Fragment(){
             codeScanner.decodeCallback = DecodeCallback {
                 activity.runOnUiThread {
                     Toast.makeText(activity, it.text, Toast.LENGTH_LONG).show()
-                    val otherAdress = it.text
-
+                    val otherAddress = it.text
+                    (activity as MainActivity?)!!.replaceFragment(BluetoothConnection())
                 }
             }
             scannerView.setOnClickListener {

@@ -1,11 +1,14 @@
 package com.example.selsovid
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -40,12 +43,14 @@ class Home : Fragment() {
         if (bluetoothAdapter == null) {
             // Device doesn't support Bluetooth
         }
-        if (bluetoothAdapter?.isEnabled == false) {
+        if (bluetoothAdapter.isEnabled == false) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             val intent = Intent(context, enableBtIntent::class.java)
+            //var ownAddress = getOwnAddress()
+
             getResult.launch(intent)
-            //startActivityForResult(enableBtIntent, 1)
-            //bluetoothAdapter.startDiscovery()
+
+
         }
 
         return mView
@@ -60,9 +65,17 @@ class Home : Fragment() {
             }
         }
 
+    @SuppressLint("MissingPermission")
+    fun getOwnAddress(): String{
+        val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+        val intent = Intent(context, enableBtIntent::class.java)
+        Log.println(Log.INFO,"BTadrresskutding",BluetoothAdapter.getDefaultAdapter().address.toString())
+        return "Beun"
+    }
+
     fun generateCode(){
-        var ownAddress = "arr, "
-        val text = ownAddress + "dit is een bluetooth adres"
+        val ownAddress = getOwnAddress()
+        val text = ownAddress
         val encoder = BarcodeEncoder()
         val bitmap = encoder.encodeBitmap(text, BarcodeFormat.QR_CODE, 400, 400)
         imageView = view?.findViewById(R.id.QrcodeImageView) as ImageView

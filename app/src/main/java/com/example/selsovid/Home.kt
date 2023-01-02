@@ -7,6 +7,7 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -20,11 +21,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import java.io.IOException
+import java.util.UUID
 
 
 class Home : Fragment() {
     lateinit var imageView: ImageView
     lateinit var mView: View
+    lateinit var bluetoothAdapter: BluetoothAdapter
+    lateinit var bluetoothManager: BluetoothManager
+    val myUUID: UUID = "a0f040b4-a199-4c61-b006-8bd737970696" as UUID
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -37,12 +42,9 @@ class Home : Fragment() {
             val toast = Toast.makeText(activity, "code genereren", Toast.LENGTH_SHORT)
             toast.show()
         }
-        val bluetoothManager: BluetoothManager = context?.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
-        if (bluetoothAdapter == null) {
-            // Device doesn't support Bluetooth
-        }
-        if (bluetoothAdapter.isEnabled == false) {
+        bluetoothManager = context?.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        bluetoothAdapter = bluetoothManager.adapter
+        if (!bluetoothAdapter.isEnabled) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             val intent = Intent(context, enableBtIntent::class.java)
             //var ownAddress = getOwnAddress()
@@ -81,10 +83,12 @@ class Home : Fragment() {
         imageView.setImageBitmap(bitmap)
     }
 
+    @SuppressLint("MissingPermission")
     private inner class AcceptThread : Thread() {
 
+
         private val mmServerSocket: BluetoothServerSocket? by lazy(LazyThreadSafetyMode.NONE) {
-            bluetoothAdapter?.listenUsingInsecureRfcommWithServiceRecord(NAME, MY_UUID)
+            bluetoothAdapter?.listenUsingInsecureRfcommWithServiceRecord("SelSovID", myUUID)
         }
 
         override fun run() {
@@ -116,6 +120,12 @@ class Home : Fragment() {
         }
     }
 
+    private fun manageMyConnectedSocket(it: BluetoothSocket) {
+        val handler: Handler = Handler()
+
+        var mConnectedThread = MyBluetoothService(handler).ConnectedThread(it)
+        mConnectedThread.start()
+    }
 
 
 }

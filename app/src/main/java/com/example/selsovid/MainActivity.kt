@@ -70,13 +70,8 @@ class MainActivity : AppCompatActivity() {
         val camera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
         val write = ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
         val read = ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)
-        val bluetooth = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
-        val bluetoothAdmin = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN)
-        val bluetoothAdvertise = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADVERTISE)
-        val bluetoothConnect = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
-        val bluetoothScan = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN)
-        val coarsePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        val finePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        val internet = ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
+
 
 
 
@@ -90,27 +85,10 @@ class MainActivity : AppCompatActivity() {
         if (read != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
-        if (bluetooth != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.BLUETOOTH)
+        if (internet != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.INTERNET);
         }
-        if (bluetoothAdmin != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.BLUETOOTH_ADMIN)
-        }
-        if (bluetoothConnect != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.BLUETOOTH_CONNECT)
-        }
-        if (bluetoothAdvertise != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.BLUETOOTH_ADVERTISE)
-        }
-        if (bluetoothScan != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.BLUETOOTH_SCAN)
-        }
-        if (coarsePermission != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION)
-        }
-        if (finePermission != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
+
 
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toTypedArray(),

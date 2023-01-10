@@ -1,35 +1,34 @@
 package com.example.selsovid
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.bluetooth.*
-import android.content.ContentValues.TAG
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
-import java.io.IOException
-import java.util.UUID
+import okhttp3.*
+import okio.ByteString
+import okio.ByteString.Companion.decodeHex
+import java.util.*
+import java.util.concurrent.TimeUnit
+
+import com.google.gson.Gson
+
+
 
 
 class Home : Fragment() {
     lateinit var imageView: ImageView
     lateinit var mView: View
-    lateinit var bluetoothAdapter: BluetoothAdapter
-    lateinit var bluetoothManager: BluetoothManager
-    val myUUID: UUID = "a0f040b4-a199-4c61-b006-8bd737970696" as UUID
+
+    lateinit var randomUUID: UUID
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -39,20 +38,10 @@ class Home : Fragment() {
 
         generateButton?.setOnClickListener{
             generateCode()
-            val toast = Toast.makeText(activity, "code genereren", Toast.LENGTH_SHORT)
-            toast.show()
+            //val toast = Toast.makeText(activity, "code genereren", Toast.LENGTH_SHORT)
+            //toast.show()
         }
-        bluetoothManager = context?.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        bluetoothAdapter = bluetoothManager.adapter
-        if (!bluetoothAdapter.isEnabled) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            val intent = Intent(context, enableBtIntent::class.java)
-            //var ownAddress = getOwnAddress()
 
-            getResult.launch(intent)
-
-
-        }
 
         return mView
     }
@@ -66,66 +55,105 @@ class Home : Fragment() {
             }
         }
 
-    @SuppressLint("MissingPermission")
-    fun getOwnAddress(): String{
-        val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-        val intent = Intent(context, enableBtIntent::class.java)
-        Log.println(Log.INFO,"BTadrresskutding",BluetoothAdapter.getDefaultAdapter().address.toString())
-        return BluetoothAdapter.getDefaultAdapter().address.toString()
-    }
+
 
     fun generateCode(){
-        val ownAddress = getOwnAddress()
-        val text = ownAddress
+        setRandomAPIConnectionCode()
+        val connectCode = randomUUID.toString()
+        connectToAPI()
         val encoder = BarcodeEncoder()
-        val bitmap = encoder.encodeBitmap(text, BarcodeFormat.QR_CODE, 400, 400)
+        val bitmap = encoder.encodeBitmap(connectCode, BarcodeFormat.QR_CODE, 500, 500)
         imageView = view?.findViewById(R.id.QrcodeImageView) as ImageView
         imageView.setImageBitmap(bitmap)
     }
 
-    @SuppressLint("MissingPermission")
-    private inner class AcceptThread : Thread() {
-
-
-        private val mmServerSocket: BluetoothServerSocket? by lazy(LazyThreadSafetyMode.NONE) {
-            bluetoothAdapter?.listenUsingInsecureRfcommWithServiceRecord("SelSovID", myUUID)
-        }
-
-        override fun run() {
-            // Keep listening until exception occurs or a socket is returned.
-            var shouldLoop = true
-            while (shouldLoop) {
-                val socket: BluetoothSocket? = try {
-                    mmServerSocket?.accept()
-                } catch (e: IOException) {
-                    Log.e(TAG, "Socket's accept() method failed", e)
-                    shouldLoop = false
-                    null
-                }
-                socket?.also {
-                    manageMyConnectedSocket(it)
-                    mmServerSocket?.close()
-                    shouldLoop = false
-                }
-            }
-        }
-
-        // Closes the connect socket and causes the thread to finish.
-        fun cancel() {
-            try {
-                mmServerSocket?.close()
-            } catch (e: IOException) {
-                Log.e(TAG, "Could not close the connect socket", e)
-            }
-        }
+    fun setRandomAPIConnectionCode() {
+        randomUUID = UUID.randomUUID()
     }
 
-    private fun manageMyConnectedSocket(it: BluetoothSocket) {
-        val handler: Handler = Handler()
-
-        var mConnectedThread = MyBluetoothService(handler).ConnectedThread(it)
-        mConnectedThread.start()
+    fun getRandomAPIConnectionCode(): UUID{
+        return randomUUID
     }
+
+    fun connectToAPI(){
+
+        val client = OkHttpClient.Builder()
+            .readTimeout(3, TimeUnit.SECONDS)
+            .build()
+        val request = Request.Builder()
+            .url("wss://ssi.s.mees.io/api/ws")
+            .build()
+        var listener = EchoWebSocketListener()
+        listener.setUUID(getRandomAPIConnectionCode())
+        client.newWebSocket(request, listener )
+
+    }
+
+
+    class EchoWebSocketListener : WebSocketListener() {
+        private lateinit var randomUUID: UUID
+        override fun onOpen(webSocket: WebSocket, response: Response) {
+
+            Log.v("testbed", randomUUID.toString())
+
+            webSocket.send("{\"type\":\"open\", \"channel\":\"$randomUUID\"}")
+            webSocket.send("{\"type\":\"message\", \"channel\":\"$randomUUID\", \"payload\":\"homeTest\"}")
+            //webSocket.send("{\"type\":\"close\", \"channel\":\"$randomUUID\"}")
+            //webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !")
+        }
+
+        override fun onMessage(webSocket: WebSocket, text: String) {
+            var message = Gson().fromJson(text, Message::class.java)
+            //if(message.payload == )
+
+            output("Receiving : $message")
+        }
+
+        override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
+            output("Receiving bytes : " + bytes.hex())
+        }
+
+        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+            webSocket!!.close(NORMAL_CLOSURE_STATUS, null)
+            output("Closing : $code / $reason")
+        }
+
+        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            output("Error : " + t.message)
+        }
+
+        companion object {
+            private val NORMAL_CLOSURE_STATUS = 1000
+        }
+
+        private fun output(txt: String) {
+            Log.v("webSocket", txt)
+        }
+
+        fun setUUID(uuid: UUID){
+            randomUUID = uuid
+        }
+
+        class Message {
+            var type: String = ""
+            var channel: String = ""
+            var payload: String = ""
+
+            override fun toString(): String {
+                return "Message(type=$type, channel=$channel, payload=$payload)"
+                }
+        }
+
+
+
+
+
+
+    }
+
+
+
+
 
 
 }

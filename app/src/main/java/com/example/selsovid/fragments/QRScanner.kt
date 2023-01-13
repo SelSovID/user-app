@@ -1,4 +1,4 @@
-package com.example.selsovid
+package com.example.selsovid.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
+import com.example.selsovid.MainActivity
+import com.example.selsovid.R
 import com.google.gson.Gson
 import okhttp3.*
 import okio.ByteString

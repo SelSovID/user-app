@@ -4,18 +4,15 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.selsovid.databinding.ActivityMainBinding
-import com.google.zxing.BarcodeFormat
-import com.journeyapps.barcodescanner.BarcodeEncoder
-
+import com.example.selsovid.fragments.Home
+import com.example.selsovid.fragments.QRScanner
+import com.example.selsovid.fragments.vcList.VCList
 
 
 class MainActivity : AppCompatActivity() {
@@ -37,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId){
                 R.id.home -> replaceFragment(Home())
                 R.id.qrscanner -> replaceFragment(QRScanner())
-                R.id.listoftruths -> replaceFragment(Listoftruths())
+                R.id.listoftruths -> replaceFragment(VCList())
 
                 else->{
                 }

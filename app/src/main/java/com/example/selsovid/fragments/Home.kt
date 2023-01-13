@@ -1,4 +1,4 @@
-package com.example.selsovid
+package com.example.selsovid.fragments
 
 import android.app.Activity
 import android.os.Bundle
@@ -8,14 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.example.selsovid.R
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import okhttp3.*
 import okio.ByteString
-import okio.ByteString.Companion.decodeHex
 import java.util.*
 import java.util.concurrent.TimeUnit
 

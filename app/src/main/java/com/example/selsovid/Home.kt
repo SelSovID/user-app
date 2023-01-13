@@ -1,6 +1,8 @@
 package com.example.selsovid
 
+
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,20 +10,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import okhttp3.*
 import okio.ByteString
-import okio.ByteString.Companion.decodeHex
 import java.util.*
 import java.util.concurrent.TimeUnit
-
-import com.google.gson.Gson
-
-
 
 
 class Home : Fragment() {
@@ -31,20 +30,30 @@ class Home : Fragment() {
     lateinit var randomUUID: UUID
 
 
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         mView = inflater.inflate(R.layout.fragment_home, container, false)
         val generateButton = mView.findViewById(R.id.btnGenerate) as? Button
+        val requestButton = mView.findViewById(R.id.gotoRequest) as? Button
+
+
 
         generateButton?.setOnClickListener{
             generateCode()
-            //val toast = Toast.makeText(activity, "code genereren", Toast.LENGTH_SHORT)
-            //toast.show()
+        }
+
+        requestButton?.setOnClickListener{
+            val intent = Intent (getActivity(), SendRequest::class.java)
+            getActivity()?.startActivity(intent)
         }
 
 
         return mView
     }
+
+
 
     private val getResult =
         registerForActivityResult(
@@ -76,7 +85,6 @@ class Home : Fragment() {
     }
 
     fun connectToAPI(){
-
         val client = OkHttpClient.Builder()
             .readTimeout(3, TimeUnit.SECONDS)
             .build()
@@ -86,7 +94,6 @@ class Home : Fragment() {
         var listener = EchoWebSocketListener()
         listener.setUUID(getRandomAPIConnectionCode())
         client.newWebSocket(request, listener )
-
     }
 
 

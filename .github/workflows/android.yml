@@ -23,14 +23,7 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
-  
-  apk:
     - name: Build Android App
-      - uses: sparkfabrik/android-build-action@v1.0.0
-        with:
-          project-path: android
-          output-path: my-app.apk
-          browserstack-upload: true
-          browserstack-username: ${{ secrets.BROWSERSTACK_USERNAME }}
-          browserstack-access-key: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+      uses: sparkfabrik/android-build-action@v1.2.0
+
 

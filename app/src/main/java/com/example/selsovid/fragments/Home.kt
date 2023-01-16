@@ -16,6 +16,7 @@ import com.example.selsovid.R
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.selsovid.SendRequest
+import com.example.selsovid.webSocketUtilities
 import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
@@ -93,8 +94,8 @@ class Home : Fragment() {
         val request = Request.Builder()
             .url("wss://ssi.s.mees.io/api/ws")
             .build()
-        var listener = EchoWebSocketListener()
-        listener.setUUID(getRandomAPIConnectionCode())
+        var listener = webSocketUtilities.WebsocketConnection(getRandomAPIConnectionCode().toString(), true)
+        //listener.setUUID(getRandomAPIConnectionCode())
         client.newWebSocket(request, listener )
     }
 

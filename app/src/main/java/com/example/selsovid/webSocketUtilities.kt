@@ -21,15 +21,21 @@ class webSocketUtilities {
     @Serializable
     data class webSocketMessage(val type: MessageType, val channel: String, val payload: String = "")
 
-    class WebsocketConnection(val channelID: String) : WebSocketListener() {
+    class WebsocketConnection(val channelID: String, val isHolder: Boolean) : WebSocketListener() {
 
         override fun onOpen(webSocket: WebSocket, response: Response) {
 
             Log.v("testbed", channelID)
 
             var openMessage = webSocketMessage(MessageType.OPEN, channelID)
-            webSocket.send(Json.encodeToString(openMessage))
+            if(isHolder){
+                webSocket.send(Json.encodeToString(openMessage))
+                Log.v("holder", openMessage.toString())
+            } else {
+                webSocket.send(Json.encodeToString(openMessage))
+                //webSocket.send("{\"type\":\"message\", \"channel\":\"$channelID\", \"payload\":\"homeTest\"}")
 
+            }
             //webSocket.send("{\"type\":\"open\", \"channel\":\"$channelID\"}")
             //webSocket.send("{\"type\":\"message\", \"channel\":\"$channelID\", \"payload\":\"homeTest\"}")
             //webSocket.send("{\"type\":\"close\", \"channel\":\"$randomUUID\"}")

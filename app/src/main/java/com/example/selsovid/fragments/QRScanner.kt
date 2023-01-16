@@ -12,6 +12,7 @@ import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
 import com.example.selsovid.MainActivity
 import com.example.selsovid.R
+import com.example.selsovid.webSocketUtilities
 import com.google.gson.Gson
 import okhttp3.*
 import okio.ByteString
@@ -41,7 +42,7 @@ class QRScanner : Fragment(){
                     val request = Request.Builder()
                         .url("wss://ssi.s.mees.io/api/ws")
                         .build()
-                    var listener = EchoWebSocketListener()
+                    var listener = webSocketUtilities.WebsocketConnection(it.text, false)
                     //listener.setUUID(UUID.fromString(it.text))
                     client.newWebSocket(request, listener )
 

@@ -35,17 +35,20 @@ class SendRequest: Activity() {
         }
 
         sendRequestButton.setOnClickListener {
+            var issuerID = 1
+            var fromUser = "ssi.is.cool@gmail.com"
             requestString = requestName.text.toString()
-            requestString = "{" +
-                    "\"issuerId\": 1, " +
-                    "\"fromUser\": \"ssi.is.cool@gmail.com\", " +
-                    "\"requestText\": \"$requestString\", " +
-                    "\"attachedVCs\": []" +
-                    "}"
-            Toast.makeText(this, requestString, Toast.LENGTH_LONG).show()
+            var attachedVCs = arrayOf<String>()
+            var apiRequester = APIRequestsUtitities.APIRequester()
+
+            //APIRequestsUtitities.APIRequester(issuerID, fromUser, requestString, attachedVCs)
+            //requestString =  1, ssi.is.cool@gmail.com, $requestString, []
+
+            //Toast.makeText(this, requestString, Toast.LENGTH_LONG).show()
             val thread = Thread(Runnable {
                 println("thread started.")
-                connectToAPI()
+                //connectToAPI()
+                apiRequester.connectToAPI(issuerID, fromUser, requestString, attachedVCs)
                 Thread.sleep(5000)
                 println("thread done yay.")
 

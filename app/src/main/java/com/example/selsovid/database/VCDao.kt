@@ -4,12 +4,13 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface VcDao {
     //get all
     @Query("SELECT * FROM verified_credentials_table")
-    fun getAllVCs(): Array<VerifiableCredential>
+    fun getAllVCs(): Flow<List<VerifiableCredential>>
 
 //    //insert!
 //    @Insert(onConflict = OnConflictStrategy.IGNORE)

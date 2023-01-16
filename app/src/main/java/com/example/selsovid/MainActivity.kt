@@ -10,8 +10,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.selsovid.databinding.ActivityMainBinding
-
-
+import com.example.selsovid.fragments.Home
+import com.example.selsovid.fragments.QRScanner
+import com.example.selsovid.fragments.vcList.VCList
 
 
 class MainActivity : AppCompatActivity() {

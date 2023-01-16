@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import com.example.selsovid.R
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.example.selsovid.SendRequest
 import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder

@@ -37,10 +37,10 @@ class SendRequest: Activity() {
         sendRequestButton.setOnClickListener {
             requestString = requestName.text.toString()
             requestString = "{" +
-                    "\"issuerId\": 57683268, " +
+                    "\"issuerId\": 1, " +
                     "\"fromUser\": \"ssi.is.cool@gmail.com\", " +
                     "\"requestText\": \"$requestString\", " +
-                    "\"attachedVCs\": [\"\", \"\"]" +
+                    "\"attachedVCs\": []" +
                     "}"
             Toast.makeText(this, requestString, Toast.LENGTH_LONG).show()
             val thread = Thread(Runnable {
@@ -77,7 +77,7 @@ class SendRequest: Activity() {
 
     }
     companion object {
-        val MEDIA_TYPE_MARKDOWN = "text/x-markdown; charset=utf-8".toMediaType()
+        val MEDIA_TYPE_JSON = "application/json; charset=utf-8".toMediaType()
     }
 
     fun connectToAPI(){
@@ -86,8 +86,8 @@ class SendRequest: Activity() {
             .readTimeout(10, TimeUnit.SECONDS)
             .build()
         val request = Request.Builder()
-            .url("https://ssi.s.mees.io/api")
-            .post(postBody.toRequestBody(MEDIA_TYPE_MARKDOWN))
+            .url("https://ssi.s.mees.io/api/holder/request")
+            .post(postBody.toRequestBody(MEDIA_TYPE_JSON))
             .build()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Unexpected code $response, request: $postBody")

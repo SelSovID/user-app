@@ -42,7 +42,7 @@ class QRScanner : Fragment(){
                         .url("wss://ssi.s.mees.io/api/ws")
                         .build()
                     var listener = EchoWebSocketListener()
-                    listener.setUUID(UUID.fromString(it.text))
+                    //listener.setUUID(UUID.fromString(it.text))
                     client.newWebSocket(request, listener )
 
                 }

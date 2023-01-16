@@ -10,16 +10,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.selsovid.databinding.ActivityMainBinding
-import com.example.selsovid.fragments.Home
-import com.example.selsovid.fragments.QRScanner
-import com.example.selsovid.fragments.vcList.VCList
+
+
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
 
-    private val REQUEST_ID_MULTIPLE_PERMISSIONS = 7
+    private val REQUEST_ID_MULTIPLE_PERMISSIONS = 4
 
     lateinit var imageView: ImageView
 
@@ -44,7 +43,6 @@ class MainActivity : AppCompatActivity() {
         checkAndroidVersion()
 
 
-        //if(fragment == "R.id.home")
     }
 
     fun replaceFragment(fragment: Fragment){
@@ -70,24 +68,22 @@ class MainActivity : AppCompatActivity() {
         val internet = ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
 
 
-
-
         val listPermissionsNeeded: MutableList<String> = ArrayList()
         if (camera != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.CAMERA)
         }
         if (write != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
         if (read != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
         if (internet != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.INTERNET);
+            listPermissionsNeeded.add(Manifest.permission.INTERNET)
         }
 
 
-        if (!listPermissionsNeeded.isEmpty()) {
+        if (listPermissionsNeeded.isNotEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toTypedArray(),
                 REQUEST_ID_MULTIPLE_PERMISSIONS
             )

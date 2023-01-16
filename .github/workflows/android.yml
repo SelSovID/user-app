@@ -25,7 +25,7 @@ jobs:
       run: ./gradlew build
   apk:
       name: Generate APK
-      needs: test
+      needs: build
       runs-on: ubuntu-latest
       steps:
         - name: Checkout

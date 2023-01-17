@@ -1,0 +1,13 @@
+syntax = "proto3";
+option java_package = "com.example.selsovid.data";
+//option java_multiple_files = true;
+
+
+// SSICert type
+message SSICert {
+  optional SSICert parent = 1;
+  string publicKey = 2;
+  string credentialText = 3;
+  bytes ownerSignature = 4;
+  optional bytes parentSignature = 5;
+}

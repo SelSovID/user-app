@@ -1,32 +1,40 @@
 package com.example.selsovid.fragments
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.liveData
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
 import com.example.selsovid.MainActivity
 import com.example.selsovid.R
-import com.example.selsovid.webSocketUtilities
-import com.google.gson.Gson
+import com.example.selsovid.ReceivedVC
+import com.example.selsovid.WebSocketUtilities
+import kotlinx.android.parcel.Parcelize
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.*
-import okio.ByteString
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 
 class QRScanner : Fragment(){
         private lateinit var codeScanner: CodeScanner
         var activity: MainActivity? = getActivity() as MainActivity?
+        var receivedCode = ""
+
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View {
-            return inflater.inflate(R.layout.fragment_q_r_scanner, container, false)
+            var binding = inflater.inflate(R.layout.fragment_q_r_scanner, container, false)
+            return binding
         }
 
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,18 +43,31 @@ class QRScanner : Fragment(){
             codeScanner = CodeScanner(activity, scannerView)
             codeScanner.decodeCallback = DecodeCallback {
                 activity.runOnUiThread {
-                    Toast.makeText(activity, it.text, Toast.LENGTH_LONG).show()
-                    val client = OkHttpClient.Builder()
-                        .readTimeout(3, TimeUnit.SECONDS)
-                        .build()
-                    val request = Request.Builder()
-                        .url("wss://ssi.s.mees.io/api/ws")
-                        .build()
-                    var listener = webSocketUtilities.WebsocketConnection(it.text, false)
-                    //listener.setUUID(UUID.fromString(it.text))
-                    client.newWebSocket(request, listener )
+                    receivedCode = it.text
+                    //Toast.makeText(activity, it.text, Toast.LENGTH_LONG).show()
 
-                }
+                        val client = OkHttpClient.Builder()
+                            .readTimeout(3, TimeUnit.SECONDS)
+                            .build()
+                        val request = Request.Builder()
+                            .url("wss://ssi.s.mees.io/api/ws")
+                            .build()
+                        val listener = WebSocketUtilities.WebsocketConnection(it.text, false)
+                        client.newWebSocket(request, listener)
+                        //Thread.sleep(2500)
+
+                        var receivedMessage = listener.getMessage()
+                        var info = Info(receivedMessage)
+                        startReceivedVC(info)
+
+
+
+
+                    }
+
+
+
+
             }
             scannerView.setOnClickListener {
                 codeScanner.startPreview()
@@ -63,65 +84,40 @@ class QRScanner : Fragment(){
             codeScanner.releaseResources()
             super.onPause()
         }
+    fun startReceivedVC(setMessage: Info){
+        //ReceivedVC().setInfoToScreen(setMessage)
+        Log.v("startReceivedVC", setMessage.toString())
+        //var messagewithtype =  Info(setMessage)
+        val intent = Intent (getActivity(), ReceivedVC::class.java)
+        intent.putExtra("message", setMessage)
+        startActivity(intent)
+    }
 
-    class EchoWebSocketListener : WebSocketListener() {
-        private lateinit var socketUUID: UUID
-        override fun onOpen(webSocket: WebSocket, response: Response) {
-
-            Log.v("testbed", socketUUID.toString())
-
-            webSocket.send("{\"type\":\"open\", \"channel\":\"$socketUUID\"}")
-            webSocket.send("{\"type\":\"message\", \"channel\":\"$socketUUID\", \"payload\":\"scannertesting\"}")
-            webSocket.send("{\"type\":\"close\", \"channel\":\"$socketUUID\"}")
-            webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !")
-        }
-
-        override fun onMessage(webSocket: WebSocket, text: String) {
-            var message = Gson().fromJson(text, Message::class.java)
-
-            output("Receiving : $message")
-        }
-
-        override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-            output("Receiving bytes : " + bytes.hex())
-        }
-
-        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-            webSocket!!.close(NORMAL_CLOSURE_STATUS, null)
-            output("Closing : $code / $reason")
-        }
-
-        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-            output("Error : " + t.message)
-        }
-
-        companion object {
-            private val NORMAL_CLOSURE_STATUS = 1000
-        }
-
-        private fun output(txt: String) {
-            Log.v("webSocket", txt)
-        }
-
-        fun setUUID(uuid: UUID){
-            socketUUID = uuid
-        }
-
-        class Message {
-            var type: String = ""
-            var channel: String = ""
-            var payload: String = ""
-
-            override fun toString(): String {
-                return "Message(type=$type, channel=$channel, payload=$payload)"
-            }
-        }
-
-
-
-
-
+    @Parcelize
+    data class Info(val name : String) : Parcelable {
 
     }
+
+//    fun setMessage(message: String){
+//
+//    }
+
+//    class sendToNewActivity(val message: String): Fragment(){
+//
+//
+//
+//        fun send(message: String) {
+//            Log.v("startReceivedVC", message)
+//            val intent = Intent(activity, ReceivedVC::class.java)
+//            intent.putExtra("message", message)
+//            startActivity(intent)
+//        }
+//    }
+
+
+
+
+
+
 
 }

@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.20'
     id 'kotlin-kapt'
+    id("kotlin-parcelize")
+
 }
 
 
@@ -11,6 +13,8 @@ android {
     namespace 'com.example.selsovid'
     compileSdk 33
     viewBinding.enabled = true
+
+
 
     defaultConfig {
         applicationId "com.example.selsovid"
@@ -39,6 +43,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+
 
 }
 

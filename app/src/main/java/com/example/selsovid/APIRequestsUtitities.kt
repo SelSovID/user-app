@@ -16,27 +16,18 @@ import java.util.concurrent.TimeUnit
 
 class APIRequestsUtitities {
     @Serializable
-    data class APIMessage(var issuerId: Int, var fromUser: String, var requestString: String, val attachedVCs: Array<String>)
+    data class APIMessage(var issuerId: Int, var requestString: String, val attachedVCs: Array<String>)
 
     companion object {
         val MEDIA_TYPE_JSON = "application/json; charset=utf-8".toMediaType()
     }
 
     class APIRequester(): Activity(){
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
 
-            val thread = Thread(Runnable {
-                //connectToAPI()
-            })
-            thread.start()
-
-        }
-
-        fun connectToAPI(issuerId: Int, fromUser: String, requestString: String, attachedVCs: Array<String>) {
+        fun connectToAPI(issuerId: Int, requestString: String, attachedVCs: Array<String>) {
             //Log.v("apirequester", "running in apirequester")
             var stringOfRequest = Json.encodeToString(requestString)
-            var postBody = APIMessage(issuerId, fromUser, stringOfRequest.trimMargin(), attachedVCs).toString().trimMargin()
+            var postBody = APIMessage(issuerId, stringOfRequest.trimMargin(), attachedVCs).toString().trimMargin()
             Log.v("apirequester", postBody)
             val client = OkHttpClient.Builder()
                 .readTimeout(10, TimeUnit.SECONDS)

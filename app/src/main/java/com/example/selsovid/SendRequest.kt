@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -13,7 +14,7 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 
-class SendRequest: Activity() {
+class SendRequest: AppCompatActivity() {
     private var dataModel: ArrayList<CustomAdapter.DataModel>? = null
     private lateinit var listView: ListView
     private lateinit var adapter: CustomAdapter
@@ -36,7 +37,7 @@ class SendRequest: Activity() {
 
         sendRequestButton.setOnClickListener {
             var issuerID = 1
-            var fromUser = "ssi.is.cool@gmail.com"
+            //var fromUser = "ssi.is.cool@gmail.com"
             requestString = requestName.text.toString()
             var attachedVCs = arrayOf<String>()
             var apiRequester = APIRequestsUtitities.APIRequester()
@@ -48,7 +49,7 @@ class SendRequest: Activity() {
             val thread = Thread(Runnable {
                 println("thread started.")
                 //connectToAPI()
-                apiRequester.connectToAPI(issuerID, fromUser, requestString, attachedVCs)
+                apiRequester.connectToAPI(issuerID, requestString, attachedVCs)
                 Thread.sleep(5000)
                 println("thread done yay.")
 
@@ -57,50 +58,28 @@ class SendRequest: Activity() {
             thread.start()
             }
 
-        listView = findViewById<View>(R.id.listView) as ListView
-        dataModel = ArrayList<CustomAdapter.DataModel>()
-        dataModel!!.add(CustomAdapter.DataModel("Apple Pie", false))
-        dataModel!!.add(CustomAdapter.DataModel("Banana Bread", false))
-        dataModel!!.add(CustomAdapter.DataModel("Cupcake", false))
-        dataModel!!.add(CustomAdapter.DataModel("Donut", true))
-        dataModel!!.add(CustomAdapter.DataModel("Eclair", true))
-        dataModel!!.add(CustomAdapter.DataModel("Froyo", true))
-        dataModel!!.add(CustomAdapter.DataModel("Gingerbread", true))
-        dataModel!!.add(CustomAdapter.DataModel("Honeycomb", false))
-
-        adapter = CustomAdapter(dataModel!!, applicationContext)
-        listView.adapter = adapter
-
-        listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            val dataModel: CustomAdapter.DataModel = dataModel!![position]
-            dataModel.checked = !dataModel.checked
-            adapter.notifyDataSetChanged()
-        }
-
-
-    }
-    companion object {
-        val MEDIA_TYPE_JSON = "application/json; charset=utf-8".toMediaType()
-    }
-
-    fun connectToAPI(){
-        val postBody = requestString.trimMargin()
-        val client = OkHttpClient.Builder()
-            .readTimeout(10, TimeUnit.SECONDS)
-            .build()
-        val request = Request.Builder()
-            .url("https://ssi.s.mees.io/api/holder/request")
-            .post(postBody.toRequestBody(MEDIA_TYPE_JSON))
-            .build()
-        client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) throw IOException("Unexpected code $response, request: $postBody")
-
-            println(response.body!!.string())
-        }
+//        listView = findViewById<View>(R.id.listView) as ListView
+//        dataModel = ArrayList<CustomAdapter.DataModel>()
+//        dataModel!!.add(CustomAdapter.DataModel("Apple Pie", false))
+//        dataModel!!.add(CustomAdapter.DataModel("Banana Bread", false))
+//        dataModel!!.add(CustomAdapter.DataModel("Cupcake", false))
+//        dataModel!!.add(CustomAdapter.DataModel("Donut", true))
+//        dataModel!!.add(CustomAdapter.DataModel("Eclair", true))
+//        dataModel!!.add(CustomAdapter.DataModel("Froyo", true))
+//        dataModel!!.add(CustomAdapter.DataModel("Gingerbread", true))
+//        dataModel!!.add(CustomAdapter.DataModel("Honeycomb", false))
+//
+//        adapter = CustomAdapter(dataModel!!, applicationContext)
+//        listView.adapter = adapter
+//
+//        listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+//            val dataModel: CustomAdapter.DataModel = dataModel!![position]
+//            dataModel.checked = !dataModel.checked
+//            adapter.notifyDataSetChanged()
+//        }
 
 
     }
-
 
 
 

@@ -1,4 +1,4 @@
-package com.example.selsovid.models
+package com.example.selsovid.models.API
 
 import kotlinx.serialization.Serializable
 

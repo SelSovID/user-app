@@ -6,22 +6,15 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import androidx.appcompat.view.menu.MenuView
-import androidx.core.view.children
-import androidx.core.view.get
 import androidx.lifecycle.asLiveData
 import com.example.selsovid.R
 import com.example.selsovid.activities.AddVC
+import com.example.selsovid.activities.ShareVC
 import com.example.selsovid.database.VCDatabase
-import com.example.selsovid.databinding.ActivityAddVcBinding
 import com.example.selsovid.databinding.FragmentVclistBinding
-import com.example.selsovid.models.AttachedVCs
+import com.example.selsovid.models.API.AttachedVCs
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 /**
@@ -48,10 +41,20 @@ class VCList : Fragment() {
                 adapter.submitList(it)
             }
         }
-        view.findViewById<FloatingActionButton>(R.id.add_vc_button).setOnClickListener {
+        view.findViewById<FloatingActionButton>(R.id.add_vc_button)
+            .setOnClickListener {
                 val checked = adapter.getChecked()
                 val attached = AttachedVCs(checked.map {it.export()})
                 val intent = Intent(activity, AddVC::class.java)
+                intent.putExtra("attachedVCs", attached)
+                startActivity(intent)
+                false
+            }
+        view.findViewById<FloatingActionButton>(R.id.share_vc_button)
+            .setOnClickListener {
+                val checked = adapter.getChecked()
+                val attached = AttachedVCs(checked.map {it.export()})
+                val intent = Intent(activity, ShareVC::class.java)
                 intent.putExtra("attachedVCs", attached)
                 startActivity(intent)
                 false

@@ -1,5 +1,7 @@
 package com.example.selsovid.fragments.vcList
 
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -14,10 +16,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.selsovid.R
 import com.example.selsovid.SSICertUtilities
+import com.example.selsovid.activities.MainActivity
 import com.example.selsovid.database.VCDatabase
 import com.example.selsovid.database.VcDao
 import com.example.selsovid.database.VerifiableCredential
-import com.example.selsovid.models.RetrieveVCResponse
+import com.example.selsovid.models.API.RetrieveVCResponse
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
@@ -40,7 +43,7 @@ class VCListAdapter : ListAdapter<VerifiableCredential, VCListAdapter.VCListItem
 
     override fun onBindViewHolder(holder: VCListItemHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, vcDao!!)
+        holder.bind(item, vcDao!!, this)
         holders.add(holder)
     }
 
@@ -71,6 +74,7 @@ class VCListAdapter : ListAdapter<VerifiableCredential, VCListAdapter.VCListItem
     }
 
     class VCListItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var adapter: VCListAdapter? = null
         val view: FrameLayout
         var text: String
             get() = view.findViewById<TextView>(R.id.vc_item_text).text.toString()
@@ -94,7 +98,8 @@ class VCListAdapter : ListAdapter<VerifiableCredential, VCListAdapter.VCListItem
             view = itemView.findViewById(R.id.vclist_item)
         }
 
-        fun bind(item: VerifiableCredential, vcDao: VcDao) {
+        fun bind(item: VerifiableCredential, vcDao: VcDao, adapter: VCListAdapter) {
+            this.adapter = adapter
             vc = item
             this.vcDao = vcDao
             val textComponents = item.text.split("\n\n")
@@ -142,6 +147,9 @@ class VCListAdapter : ListAdapter<VerifiableCredential, VCListAdapter.VCListItem
                     } else {
                         vcDao!!.delete(vc!!)
                     }
+                    val intent = Intent(view.context, MainActivity::class.java)
+                    intent.flags =FLAG_ACTIVITY_NEW_TASK
+                    view.context.applicationContext.startActivity(intent)
                 } else {
                     //nothing
                 }

@@ -2,16 +2,15 @@ package com.example.selsovid.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.selsovid.SSICertUtilities
 import com.example.selsovid.database.DBKeyPair
 import com.example.selsovid.database.VCDatabase
 import com.example.selsovid.database.VerifiableCredential
 import com.example.selsovid.databinding.ActivityAddVcBinding
-import com.example.selsovid.models.AttachedVCs
-import com.example.selsovid.models.PostVCRequest
-import com.example.selsovid.models.PostVCResponse
+import com.example.selsovid.models.API.AttachedVCs
+import com.example.selsovid.models.API.PostVCRequest
+import com.example.selsovid.models.API.PostVCResponse
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

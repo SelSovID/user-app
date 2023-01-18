@@ -9,7 +9,7 @@ data class VerifiableCredential(
 
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "vc_id") val id: Int? = null,
 
-    @ColumnInfo(name = "vc_data") val data: ByteArray,
+    @ColumnInfo(name = "vc_data") val data: String,
 
     @ColumnInfo(name = "request_id") val requestId: String? = null,
 
@@ -31,7 +31,7 @@ data class VerifiableCredential(
 
     override fun hashCode(): Int {
         var result = id ?: 0
-        result = 31 * result + data.contentHashCode()
+        result = 31 * result + data.hashCode()
         result = 31 * result + (requestId?.hashCode() ?: 0)
         result = 31 * result + text.hashCode()
         return result

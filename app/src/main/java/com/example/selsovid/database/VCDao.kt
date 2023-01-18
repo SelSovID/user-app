@@ -12,9 +12,9 @@ interface VcDao {
     @Query("SELECT * FROM verified_credentials_table")
     fun getAllVCs(): Flow<List<VerifiableCredential>>
 
-//    //insert!
-//    @Insert(onConflict = OnConflictStrategy.IGNORE)
-//    suspend fun insert(VC: VerifiableCredential)
+    //insert!
+    @Insert()
+    fun insert(VC: VerifiableCredential)
 
     //delete all
     @Query("DELETE FROM verified_credentials_table")

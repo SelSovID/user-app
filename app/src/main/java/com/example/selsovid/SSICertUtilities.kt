@@ -22,7 +22,7 @@ import javax.crypto.Cipher
 
 class SSICertUtilities(
   private val publicKey: RSAPublicKey,
-  private val credentialText: String,
+  val credentialText: String,
   private val ownerSignature: ByteArray,
   private val parentSignature: ByteArray? = null,
   private val parent: SSICertUtilities? = null,
@@ -54,9 +54,9 @@ class SSICertUtilities(
     return builder.build()
   }
 
-  fun export(): ByteArray {
+  fun export(): String {
     val protoMsg = exportToProto()
-    return protoMsg.toByteArray()
+    return Base64.getEncoder().encodeToString(protoMsg.toByteArray())
   }
 
 
@@ -79,8 +79,8 @@ class SSICertUtilities(
   companion object {
     fun create(
       publicKey: RSAPublicKey,
-      credentialText: String,
       ownerPrivateKey: RSAPrivateKey,
+      credentialText: String,
     ): SSICertUtilities {
       return SSICertUtilities(publicKey, credentialText, createOwnerSignature(credentialText, ownerPrivateKey), null, null)
     }

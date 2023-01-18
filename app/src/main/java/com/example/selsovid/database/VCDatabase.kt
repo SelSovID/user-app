@@ -7,10 +7,12 @@ import androidx.room.RoomDatabase
 import kotlinx.coroutines.CoroutineScope
 
 // Annotates class to be a Room Database with a table (entity) of the Word class
-@Database(entities = [VerifiableCredential::class], version = 1, exportSchema = false)
+@Database(entities = [VerifiableCredential::class, DBKeyPair::class], version = 1, exportSchema = false)
 abstract class VCDatabase : RoomDatabase() {
 
     abstract fun vcDao(): VcDao
+
+    abstract fun kpDao(): KpDao
 
     private class VerifiedCredentialDatabaseCallback(
         private val scope: CoroutineScope

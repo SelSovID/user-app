@@ -1,4 +1,4 @@
-package com.example.selsovid
+package com.example.selsovid.activities
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.selsovid.R
 import com.example.selsovid.databinding.ActivityMainBinding
-import com.example.selsovid.fragments.Home
 import com.example.selsovid.fragments.QRScanner
 import com.example.selsovid.fragments.vcList.VCList
 
@@ -25,14 +25,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        replaceFragment(Home())
+        replaceFragment(VCList())
+        binding.bottomNavigation.selectedItemId = R.id.bottom_nav_vc
 
 
         binding.bottomNavigation.setOnItemSelectedListener{
             when(it.itemId){
-                R.id.home -> replaceFragment(Home())
                 R.id.qrscanner -> replaceFragment(QRScanner())
-                R.id.listoftruths -> replaceFragment(VCList())
+                R.id.bottom_nav_vc -> replaceFragment(VCList())
 
                 else->{
                 }

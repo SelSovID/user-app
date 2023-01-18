@@ -14,4 +14,13 @@
         <!-- Customize your theme here. -->
         <item name="hintTextColor">@color/black</item>
     </style>
+
+    <style name="Theme.SelSovId.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.SelSovId.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.SelSovId.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

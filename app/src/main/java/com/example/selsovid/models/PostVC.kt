@@ -1,9 +1,9 @@
-package com.example.selsovid.jsonModel
+package com.example.selsovid.models
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PostVCRequest(val vc: String, val attachedVCs: Array<String>, val issuerId: Int) {
+data class PostVCRequest(val vc: String, val attachedVCs: List<String>, val issuerId: Int) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -11,7 +11,7 @@ data class PostVCRequest(val vc: String, val attachedVCs: Array<String>, val iss
         other as PostVCRequest
 
         if (vc != other.vc) return false
-        if (!attachedVCs.contentEquals(other.attachedVCs)) return false
+        if (!attachedVCs.containsAll(other.attachedVCs)) return false
         if (issuerId != other.issuerId) return false
 
         return true
@@ -19,7 +19,7 @@ data class PostVCRequest(val vc: String, val attachedVCs: Array<String>, val iss
 
     override fun hashCode(): Int {
         var result = vc.hashCode()
-        result = 31 * result + attachedVCs.contentHashCode()
+        result = 31 * result + attachedVCs.hashCode()
         result = 31 * result + issuerId
         return result
     }

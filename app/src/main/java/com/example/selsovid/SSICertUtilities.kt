@@ -108,6 +108,11 @@ class SSICertUtilities(
       return SSICertUtilities(publicKey, credentialText, ownerSignature, parentSignature, parent)
     }
 
+    fun import(data: String): SSICertUtilities {
+      val buf = Base64.getDecoder().decode(data)
+      return import(buf)
+    }
+
     fun import(data: ByteArray): SSICertUtilities {
       val decoded = SSICert.parseFrom(data)
       return import(decoded)

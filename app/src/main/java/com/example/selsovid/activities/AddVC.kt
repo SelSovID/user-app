@@ -1,19 +1,18 @@
-package com.example.selsovid
+package com.example.selsovid.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
+import com.example.selsovid.SSICertUtilities
 import com.example.selsovid.database.DBKeyPair
 import com.example.selsovid.database.VCDatabase
 import com.example.selsovid.database.VerifiableCredential
-import com.example.selsovid.fragments.vcList.VCList
-import com.example.selsovid.jsonModel.PostVCRequest
-import com.example.selsovid.jsonModel.PostVCResponse
-import kotlinx.serialization.encodeToString
+import com.example.selsovid.databinding.ActivityAddVcBinding
+import com.example.selsovid.models.AttachedVCs
+import com.example.selsovid.models.PostVCRequest
+import com.example.selsovid.models.PostVCResponse
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -28,40 +27,34 @@ import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 import java.util.concurrent.TimeUnit
 
+class AddVC : AppCompatActivity() {
+    private lateinit var binding: ActivityAddVcBinding
 
-class SendRequest: AppCompatActivity() {
+    private lateinit var attachedVCs: List<String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_send_request)
-        supportFragmentManager.commit {
-            replace<VCList>(R.id.vc_list_fragment_container)
-        }
 
-        val credentialTextHolder = findViewById<EditText>(R.id.credential_text)
-        val sendRequestButton = findViewById<Button>(R.id.sendRequestButton)
-        val backButton = findViewById<Button>(R.id.backButton)
+        binding = ActivityAddVcBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        backButton.setOnClickListener{
-            val intent = Intent (this, MainActivity::class.java)
-            this.startActivity(intent)
-        }
+        attachedVCs = intent.getParcelableExtra("attachedVCs", AttachedVCs::class.java)?.data!!
 
-        sendRequestButton.setOnClickListener {
-            val credentialText = credentialTextHolder.text.toString()
+        binding.addVcSendButton.setOnClickListener {
+            val credentialText = "${binding.addVcVcTitle.text}\n\n${binding.addVcVcBody.text}"
 
-//            Toast.makeText(this, credentialText, Toast.LENGTH_LONG).show()
             val thread = Thread {
                 ensureKeyPairExists()
                 val cert = SSICertUtilities.create(publicKey, privateKey, credentialText)
-                val retrievalId = postRequest(cert)
+                val retrievalId = postRequest(cert, attachedVCs)
                 val vcDao = VCDatabase.getInstance(applicationContext).vcDao()
                 val vc = VerifiableCredential(null, cert.export(), retrievalId, cert.credentialText)
                 vcDao.insert(vc)
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                startActivity(intent)
             }
             thread.start()
-            }
-
-
+        }
     }
 
     private fun ensureKeyPairExists() {
@@ -102,12 +95,13 @@ class SendRequest: AppCompatActivity() {
                 throw IOException("Cannot retrieve non-existing key")
             }
         }
+
     companion object {
         private val MEDIA_TYPE_JSON = "application/json; charset=utf-8".toMediaType()
 
 
-        private fun postRequest(vc: SSICertUtilities): String {
-            val postBody = Json.encodeToString(PostVCRequest(vc.export(), arrayOf(), 1))
+        private fun postRequest(vc: SSICertUtilities, attachedVCs: List<String>): String {
+            val postBody = Json.encodeToString(PostVCRequest(vc.export(), attachedVCs, 1))
             val client = OkHttpClient.Builder()
                 .readTimeout(10, TimeUnit.SECONDS)
                 .build()
@@ -125,6 +119,4 @@ class SendRequest: AppCompatActivity() {
             }
         }
     }
-
-
 }

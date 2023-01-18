@@ -15,7 +15,7 @@ class VCListAdapter : ListAdapter<VerifiableCredential, VCListItemHolder>(Verifi
 
     override fun onBindViewHolder(holder: VCListItemHolder, position: Int) {
         val item = getItem(position)
-        holder.textView.text = item.vc_request_text
+        holder.textView.text = item.text
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -25,11 +25,11 @@ class VCListAdapter : ListAdapter<VerifiableCredential, VCListItemHolder>(Verifi
     companion object {
         private val VerifiableCredentialComparator = object : DiffUtil.ItemCallback<VerifiableCredential>() {
             override fun areItemsTheSame(oldItem: VerifiableCredential, newItem: VerifiableCredential): Boolean {
-                return oldItem === newItem
+                return oldItem.id === newItem.id
             }
 
             override fun areContentsTheSame(oldItem: VerifiableCredential, newItem: VerifiableCredential): Boolean {
-                return oldItem.vc_name == newItem.vc_name
+                return oldItem.text == newItem.text
             }
         }
     }

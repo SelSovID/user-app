@@ -2,6 +2,7 @@ package com.example.selsovid.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.selsovid.SSICertUtilities
 import com.example.selsovid.database.DBKeyPair
@@ -46,12 +47,21 @@ class AddVC : AppCompatActivity() {
             val thread = Thread {
                 ensureKeyPairExists()
                 val cert = SSICertUtilities.create(publicKey, privateKey, credentialText)
-                val retrievalId = postRequest(cert, attachedVCs)
-                val vcDao = VCDatabase.getInstance(applicationContext).vcDao()
-                val vc = VerifiableCredential(null, cert.export(), retrievalId, cert.credentialText)
-                vcDao.insert(vc)
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                startActivity(intent)
+                try {
+                    val retrievalId = postRequest(cert, attachedVCs)
+                    val vcDao = VCDatabase.getInstance(applicationContext).vcDao()
+                    val vc =
+                        VerifiableCredential(null, cert.export(), retrievalId, cert.credentialText)
+                    vcDao.insert(vc)
+
+                }
+                catch (e: java.lang.Exception) {
+//                    c
+                }
+                finally {
+                    val intent = Intent(applicationContext, MainActivity::class.java)
+                    startActivity(intent)
+                }
             }
             thread.start()
         }
@@ -60,7 +70,7 @@ class AddVC : AppCompatActivity() {
     private fun ensureKeyPairExists() {
         val database = VCDatabase.getInstance(applicationContext).kpDao()
         if (database.getPair() == null) {
-            val kpg = KeyPairGenerator.getInstance("RSA")
+            val kpg = KeyPairGenerator.getInstance("RSA", )
             kpg.initialize(2048)
             val pair = kpg.generateKeyPair()
             val dbPair = DBKeyPair(null, pair.public.encoded, pair.private.encoded)

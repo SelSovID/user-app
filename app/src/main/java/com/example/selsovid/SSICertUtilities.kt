@@ -17,7 +17,6 @@ import java.security.interfaces.RSAPublicKey
 import java.security.spec.InvalidKeySpecException
 import java.security.spec.RSAPublicKeySpec
 import java.util.*
-import javax.crypto.Cipher
 
 
 class SSICertUtilities(
@@ -87,13 +86,13 @@ class SSICertUtilities(
 
     private fun createOwnerSignature(credentialText: String, key: RSAPrivateKey): ByteArray {
       val toSign = credentialText.toByteArray()
-      return encrypt(toSign, key)
+      return sign(toSign, key)
     }
 
     private fun createParentSignature(credentialText: String, ownerSignature: ByteArray, parentPrivateKey: RSAPrivateKey): ByteArray {
       val ownerSignatureStr = Base64.getEncoder().encodeToString(ownerSignature)
       val toSign = "$credentialText$ownerSignatureStr".toByteArray()
-      return encrypt(toSign, parentPrivateKey)
+      return sign(toSign, parentPrivateKey)
     }
 
     fun create(
@@ -122,20 +121,19 @@ class SSICertUtilities(
         readPublicKey(decoded.publicKey.toByteArray()) as RSAPublicKey,
         decoded.credentialText,
         decoded.ownerSignature.toByteArray(),
-        decoded.parentSignature?.toByteArray(),
-        if (decoded.parent != null) import(decoded.parent) else null
+        if (decoded.hasParent()) decoded.parentSignature?.toByteArray() else null,
+        if (decoded.hasParent()) import(decoded.parent) else null
       )
     }
   }
 }
 
 @Throws(Exception::class)
-fun encrypt(data: ByteArray, key: Key): ByteArray {
-  val encryptCipher: Cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding")
-  val digester = MessageDigest.getInstance("SHA-256")
-  val digest = digester.digest(data)
-  encryptCipher.init(Cipher.ENCRYPT_MODE, key)
-  return encryptCipher.doFinal(digest)
+fun sign(data: ByteArray, key: PrivateKey): ByteArray {
+  val sig = Signature.getInstance("SHA256withRSA", BouncyCastleProvider())
+  sig.initSign(key)
+  sig.update(data)
+  return sig.sign()
 }
 
 @Throws(InvalidKeySpecException::class, NoSuchAlgorithmException::class, IOException::class)

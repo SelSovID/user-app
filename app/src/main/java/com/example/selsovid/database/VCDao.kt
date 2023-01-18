@@ -1,9 +1,6 @@
 package com.example.selsovid.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -16,7 +13,9 @@ interface VcDao {
     @Insert()
     fun insert(VC: VerifiableCredential)
 
-    //delete all
-    @Query("DELETE FROM verified_credentials_table")
-    fun deleteAll()
+    @Update
+    fun update(verifiableCredential: VerifiableCredential)
+
+    @Delete
+    fun delete(verifiableCredential: VerifiableCredential)
 }

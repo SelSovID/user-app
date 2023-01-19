@@ -1,4 +1,4 @@
-package com.example.selsovid.models.API
+package com.example.selsovid.models.parcels
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

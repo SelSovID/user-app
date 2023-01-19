@@ -8,7 +8,7 @@ import com.example.selsovid.database.DBKeyPair
 import com.example.selsovid.database.VCDatabase
 import com.example.selsovid.database.VerifiableCredential
 import com.example.selsovid.databinding.ActivityAddVcBinding
-import com.example.selsovid.models.API.AttachedVCs
+import com.example.selsovid.models.parcels.AttachedVCs
 import com.example.selsovid.models.API.PostVCRequest
 import com.example.selsovid.models.API.PostVCResponse
 import kotlinx.serialization.decodeFromString

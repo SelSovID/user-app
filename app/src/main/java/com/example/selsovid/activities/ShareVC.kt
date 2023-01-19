@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import com.example.selsovid.R
-import com.example.selsovid.models.API.AttachedVCs
+import com.example.selsovid.models.parcels.AttachedVCs
 import com.example.selsovid.models.websocket.WebSocketMessagePayload
 import com.example.selsovid.models.websocket.WebSocketMessageType
 import com.example.selsovid.models.websocket.WebsocketMessage

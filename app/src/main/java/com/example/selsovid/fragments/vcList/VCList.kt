@@ -14,7 +14,7 @@ import com.example.selsovid.activities.AddVC
 import com.example.selsovid.activities.ShareVC
 import com.example.selsovid.database.VCDatabase
 import com.example.selsovid.databinding.FragmentVclistBinding
-import com.example.selsovid.models.API.AttachedVCs
+import com.example.selsovid.models.parcels.AttachedVCs
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 /**

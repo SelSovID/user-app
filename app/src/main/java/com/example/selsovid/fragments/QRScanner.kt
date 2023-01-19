@@ -13,8 +13,9 @@ import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
 import com.example.selsovid.activities.MainActivity
 import com.example.selsovid.R
-import com.example.selsovid.ReceivedVC
 import com.example.selsovid.WebSocketUtilities
+import com.example.selsovid.activities.VerifyVC
+import com.example.selsovid.models.parcels.ChannelCode
 import kotlinx.android.parcel.Parcelize
 import okhttp3.*
 import java.util.concurrent.TimeUnit
@@ -37,32 +38,10 @@ class QRScanner : Fragment(){
             val activity = requireActivity()
             codeScanner = CodeScanner(activity, scannerView)
             codeScanner.decodeCallback = DecodeCallback {
-                activity.runOnUiThread {
-                    receivedCode = it.text
-                    //Toast.makeText(activity, it.text, Toast.LENGTH_LONG).show()
-
-                        val client = OkHttpClient.Builder()
-                            .readTimeout(3, TimeUnit.SECONDS)
-                            .build()
-                        val request = Request.Builder()
-                            .url("wss://ssi.s.mees.io/api/ws")
-                            .build()
-                        val listener = WebSocketUtilities.WebsocketConnection(it.text, false)
-                        client.newWebSocket(request, listener)
-                        //Thread.sleep(2500)
-
-                        var receivedMessage = listener.getMessage()
-                        var info = Info(receivedMessage)
-                        startReceivedVC(info)
-
-
-
-
-                    }
-
-
-
-
+                val channel = ChannelCode(it.text)
+                val intent = Intent(activity, VerifyVC::class.java)
+                intent.putExtra("channel", channel)
+                activity.startActivity(intent)
             }
             scannerView.setOnClickListener {
                 codeScanner.startPreview()
@@ -79,40 +58,4 @@ class QRScanner : Fragment(){
             codeScanner.releaseResources()
             super.onPause()
         }
-    fun startReceivedVC(setMessage: Info){
-        //ReceivedVC().setInfoToScreen(setMessage)
-        Log.v("startReceivedVC", setMessage.toString())
-        //var messagewithtype =  Info(setMessage)
-        val intent = Intent (getActivity(), ReceivedVC::class.java)
-        intent.putExtra("message", setMessage)
-        startActivity(intent)
-    }
-
-    @Parcelize
-    data class Info(val name : String) : Parcelable {
-
-    }
-
-//    fun setMessage(message: String){
-//
-//    }
-
-//    class sendToNewActivity(val message: String): Fragment(){
-//
-//
-//
-//        fun send(message: String) {
-//            Log.v("startReceivedVC", message)
-//            val intent = Intent(activity, ReceivedVC::class.java)
-//            intent.putExtra("message", message)
-//            startActivity(intent)
-//        }
-//    }
-
-
-
-
-
-
-
 }

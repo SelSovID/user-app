@@ -24,7 +24,6 @@ class VerifyVC : AppCompatActivity() {
         setContentView(R.layout.activity_verify_vc)
 
         channel = intent.getParcelableExtra("channel", ChannelCode::class.java)?.channel!!
-
         getSharedVCs()
     }
 

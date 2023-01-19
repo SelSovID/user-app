@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 class ShareVC : AppCompatActivity() {
     private lateinit var imageView: ImageView
     private lateinit var attachedVCs: List<String>
-    private val randomUUID: UUID = UUID.randomUUID()
+    private val channelID: String = UUID.randomUUID().toString()
     private var websocketListener: HolderWebSocketHandler? = null
 
 
@@ -45,7 +45,7 @@ class ShareVC : AppCompatActivity() {
 
 
     private fun displayQRCode(){
-        val connectCode = randomUUID.toString()
+        val connectCode = channelID
         val encoder = BarcodeEncoder()
         val bitmap = encoder.encodeBitmap(connectCode, BarcodeFormat.QR_CODE, 500, 500)
         imageView.setImageBitmap(bitmap)
@@ -60,7 +60,7 @@ class ShareVC : AppCompatActivity() {
         val request = Request.Builder()
             .url("wss://ssi.s.mees.io/api/ws")
             .build()
-        websocketListener = HolderWebSocketHandler(randomUUID.toString(), attachedVCs.toTypedArray())
+        websocketListener = HolderWebSocketHandler(channelID, attachedVCs.toTypedArray())
         client.newWebSocket(request, websocketListener!!)
     }
 

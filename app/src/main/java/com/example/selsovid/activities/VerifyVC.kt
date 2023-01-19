@@ -17,6 +17,7 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class VerifyVC : AppCompatActivity() {
+    private var websocketListener: VerifierWebsocketListener? = null
     private var channel: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +40,17 @@ class VerifyVC : AppCompatActivity() {
         val request = Request.Builder()
             .url("wss://ssi.s.mees.io/api/ws")
             .build()
-        val websocketListener = VerifierWebsocketListener(channel!!) {
-            populateVCs(it)
+        websocketListener = VerifierWebsocketListener(channel!!) {
+            runOnUiThread {
+                populateVCs(it)
+            }
         }
         client.newWebSocket(request, websocketListener!!)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        websocketListener?.closeSocket()
     }
 
     private class VerifierWebsocketListener(val channel: String, val onVCsReceived: (List<SSICertUtilities>) -> Unit) : WebSocketListener() {

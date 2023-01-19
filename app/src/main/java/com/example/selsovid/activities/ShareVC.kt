@@ -85,9 +85,6 @@ class ShareVC : AppCompatActivity() {
                     val vcPayload = Json.encodeToString(WebSocketMessagePayload(VCsToSend))
                     val wsMsg = Json.encodeToString(WebsocketMessage(WebSocketMessageType.MESSAGE.type, channel, vcPayload))
                     webSocket.send(wsMsg)
-                    val closeMsg = Json.encodeToString(WebsocketMessage(WebSocketMessageType.CLOSE.type, channel))
-                    webSocket.send(closeMsg)
-                    closeSocket()
                 }
                 WebSocketMessageType.CLOSE.type -> {
                     webSocket.close(1000, "")
@@ -104,6 +101,8 @@ class ShareVC : AppCompatActivity() {
         }
 
         fun closeSocket() {
+            val closeMsg = Json.encodeToString(WebsocketMessage(WebSocketMessageType.CLOSE.type, channel))
+            sock?.send(closeMsg)
             sock?.close(1000, "")
         }
     }

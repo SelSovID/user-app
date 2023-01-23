@@ -29,7 +29,13 @@ class VerifyVC : AppCompatActivity() {
 
     private fun populateVCs(vcs: List<SSICertUtilities>) {
         val text = findViewById<TextView>(R.id.verify_vc_vc_text)
-        text.text = vcs.joinToString("\n") { it.credentialText }
+        text.text = vcs.joinToString("\n\n") {
+            if (it.parent != null) {
+                "${it.credentialText}\nUitgegeven door: ${it.parent.credentialText}"
+            } else {
+                it.credentialText
+            }
+        }
     }
 
     private fun getSharedVCs() {

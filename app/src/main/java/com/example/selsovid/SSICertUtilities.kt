@@ -24,7 +24,7 @@ class SSICertUtilities(
   val credentialText: String,
   private val ownerSignature: ByteArray,
   private val parentSignature: ByteArray? = null,
-  private val parent: SSICertUtilities? = null,
+  val parent: SSICertUtilities? = null,
 ) {
   private val isSelfSigned: Boolean
     get() = parent == null

@@ -1,5 +1,7 @@
 package com.example.selsovid.fragments.vcList
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.view.LayoutInflater
@@ -11,6 +13,9 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
+import android.widget.Toast.makeText
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -30,12 +35,14 @@ import java.util.LinkedList
 import java.util.concurrent.TimeUnit
 
 
-class VCListAdapter : ListAdapter<VerifiableCredential, VCListAdapter.VCListItemHolder>(VerifiableCredentialComparator) {
+class VCListAdapter(private val activity: FragmentActivity) : ListAdapter<VerifiableCredential, VCListAdapter.VCListItemHolder>(VerifiableCredentialComparator) {
     private var vcDao: VcDao? = null
+    private var appContext: Context? = null;
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VCListItemHolder {
         val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
         vcDao = VCDatabase.getInstance(parent.context).vcDao()
+        appContext = parent.context;
         return VCListItemHolder(view)
     }
 
@@ -144,14 +151,44 @@ class VCListAdapter : ListAdapter<VerifiableCredential, VCListAdapter.VCListItem
                     if (res.accept) {
                         val newVC = VerifiableCredential(vc!!.id, res.vc!!, null, vc!!.text)
                         vcDao!!.update(newVC)
+                        adapter!!.activity.runOnUiThread {
+                            makeText(
+                                adapter!!.appContext,
+                                "Je VC is opgehaald!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     } else {
                         vcDao!!.delete(vc!!)
+                        if (res.denyReason != null && res.denyReason != "") {
+                            adapter!!.activity.runOnUiThread {
+                                makeText(
+                                    adapter!!.appContext,
+                                    res.denyReason,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } else {
+                            adapter!!.activity.runOnUiThread {
+                                makeText(
+                                    adapter!!.appContext,
+                                    "Je VC is helaas afgekeurd",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                     }
                     val intent = Intent(view.context, MainActivity::class.java)
                     intent.flags =FLAG_ACTIVITY_NEW_TASK
                     view.context.applicationContext.startActivity(intent)
                 } else {
-                    //nothing
+                    adapter!!.activity.runOnUiThread {
+                        makeText(
+                            adapter!!.appContext,
+                            "Er is nog niet gereageerd op je verzoek",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         }

@@ -34,7 +34,7 @@ class VCList : Fragment() {
         val recycler = view.findViewById<RecyclerView>(R.id.vclist_recyclerView)
         recycler.setHasFixedSize(true)
         recycler.layoutManager = LinearLayoutManager(view.context)
-        val adapter = VCListAdapter()
+        val adapter = VCListAdapter(requireActivity())
         recycler.adapter = adapter
         database.getAllVCs().asLiveData().observe(viewLifecycleOwner) { words ->
             words.let {

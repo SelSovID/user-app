@@ -14,11 +14,11 @@ Dit programma maakt het makkelijk om de app op een emulator te testen, of om het
 
 Ook is het nodig om de jdk te downloaden van [deze site.](https://www.oracle.com/nl/java/technologies/downloads/#jdk19-windows) (minimum van versie 11)
 
-### Downloaden app
-Download de zip van de user-app via github, pak het bestand uit in een map en open het in android studio.
+## Downloaden app
+Download de zip van de user-app via github, pak het bestand uit in een map en open het in android studio, nadat gradle is gebuild kan de app gedeployed worden op een emulator of een aangesloten apparaat.
 
 ## Via version control:
-Pek het project via de github repo, nadat de gradle gebuild is is de app te gebruiken.
+Pull het het project via de github repo, nadat de gradle gebuild is kan de app gedeployed worden op een emulator of een aangesloten apparaat.
 
 ## Configureren
 Voor het configureren:

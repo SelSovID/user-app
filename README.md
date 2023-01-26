@@ -1,5 +1,7 @@
 # user-app
 
+De user app werkt op minimaal SDK versie 33 (android 13).
+
 ## Benodigde Installaties
 * Android Studio 
 * Java Development Kit (JDK)
@@ -13,10 +15,10 @@ Dit programma maakt het makkelijk om de app op een emulator te testen, of om het
 Ook is het nodig om de jdk te downloaden van [deze site.](https://www.oracle.com/nl/java/technologies/downloads/#jdk19-windows) (minimum van versie 11)
 
 ### Downloaden app
-Download de zip van de user-app via github, pak het bestand uit in een map en bouw het gradle project
+Download de zip van de user-app via github, pak het bestand uit in een map en open het in android studio.
 
-### Openen app
-Open android studio, open de user-app, 
+## Via version control:
+Pek het project via de github repo, nadat de gradle gebuild is is de app te gebruiken.
 
 ## Configureren
 Voor het configureren:
